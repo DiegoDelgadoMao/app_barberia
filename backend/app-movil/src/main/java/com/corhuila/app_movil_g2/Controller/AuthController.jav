@@ -52,6 +52,7 @@ public class AuthController {
                     roles
             ));
         } catch (Exception e) {
+             e.printStackTrace();
             // AuthenticationException será manejada por GlobalExceptionHandler si está configurado
             // pero puedes devolver una respuesta más específica si quieres.
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

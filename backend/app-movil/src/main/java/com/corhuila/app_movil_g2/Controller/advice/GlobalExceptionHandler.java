@@ -131,20 +131,19 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(Exception.class) // Handler genérico para otras excepciones
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponse> handleAllUncaughtException(Exception ex, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Error interno del servidor",
-                "Ocurrió un error inesperado. Por favor, contacte al administrador.", // No exponer ex.getMessage() directamente por seguridad
-                request.getDescription(false)
-        );
-        // Loggear la excepción real aquí
-        // ex.printStackTrace(); // O usar un logger
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    @ExceptionHandler(Exception.class)
+@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+public ResponseEntity<ErrorResponse> handleAllUncaughtException(Exception ex, WebRequest request) {
+    ex.printStackTrace(); // 👈 MOSTRARÁ EL ERROR REAL EN LOS LOGS DEL CONTENEDOR
+    ErrorResponse errorResponse = new ErrorResponse(
+        LocalDateTime.now(),
+        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+        "Error interno del servidorrr",
+        ex.getMessage(), // 👈 OPCIONAL: Puedes usar esto para verlo también en el cuerpo
+        request.getDescription(false)
+    );
+    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+}
 
     // Clase interna para la estructura de la respuesta de error
     public static class ErrorResponse {
