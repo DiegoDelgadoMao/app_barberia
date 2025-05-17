@@ -1,0 +1,70 @@
+services:
+  project_app_barberia_frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: project_app_barberia_frontend:develop
+    container_name: project_app_barberia_frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/workspace           # hot-reload
+      - /workspace/node_modules         # bind-NULL, mantiene node_modules interno
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - barbershop_net
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: project_app_barberia_pgadmin
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    depends_on:
+      - dbpostgres
+    networks:
+      - barbershop_net
+  dbpostgres:
+    image: postgres:15
+    container_name: project_app_barberia_postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=barbershop_db
+      - POSTGRES_USER=userroot
+      - POSTGRES_PASSWORD=123456
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - barbershop_net
+
+  backend:
+    build:
+      context: ./backend/app-movil
+      dockerfile: Dockerfile
+    image: barbershop-api-backend:latest
+    container_name: barbershop-api-backend
+    depends_on:
+      - dbpostgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbpostgres:5432/barbershop_db
+      - SPRING_DATASOURCE_USERNAME=userroot
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - MAIL_PASSWORD=claveAppDeGmail
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - barbershop_net
+
+volumes:
+  postgres_data:
+
+networks:
+  barbershop_net:
+     driver: bridge
