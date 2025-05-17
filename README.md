@@ -1,130 +1,113 @@
-# APP
+# 💈 Proyecto Barbershop API
 
-Proyecto **Angular 19 + Ionic** completamente dockerizado.
-
-| Entorno | Servicio (imagen)        | Puerto | Propósito                              |
-|---------|--------------------------|--------|----------------------------------------|
-| Dev     | `frontend-dev` (Node 20) | 4200   | `ng serve` con recarga en vivo         |
----
-
-## 🛠 Requisitos
-
-* Docker 20 o superior  
-* Docker Compose v2 (`docker compose`)  
-* 4 GB de RAM libres recomendados para el watcher de Angular
+Este es un proyecto fullstack compuesto por un **frontend en Angular/Ionic** y un **backend en Spring Boot**, conectado a una base de datos **PostgreSQL**, todo orquestado mediante **Docker Compose**.
 
 ---
 
-## 🚀 Puesta en marcha
-
-```bash
-git clone https://github.com/DiegoDelgadoMao/parcial-corte2
-cd parcial-corte2
-```
-
-### 1 · Entorno **desarrollo**
-
-```bash
-docker compose up -d --build dbmysql backend frontend-test
-```
-
-* Navega a **http://localhost:4200**  
-* Cambios en `src/` → recarga automática  
-* Detener:
-
-```bash
-docker compose --profile dev stop frontend-dev
-```
-
-* Abre **http://localhost:8080**  
-* Re‑build tras cambios:
-
-```bash
-docker compose build frontend
-docker compose up -d frontend
-```
-
----
-
-## 📂 Estructura
+## 📦 Estructura del Proyecto
 
 ```
-directorio/
-├── .vscode/
-│   ├── settings.json
-│   └── launch.json
+project_app_barberia/
 ├── backend/
-│   ├── app-movil/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   └── index.js
-│   ├── config/
-│   │   └── database.js
-│   └── server.js
+│   └── app-movil/
+│       ├── src/
+│       ├── Dockerfile
+│       └── pom.xml
 ├── frontend/
-│   ├── .angular/
-│   ├── dist/
-│   ├── node_modules/
-│   ├── public/
 │   ├── src/
-│   │   ├── app/
-│   │   │   ├── shared/
-│   │   │   │   ├── ionic-standalone.ts
-│   │   │   ├── pages/
-│   │   │   │   ├── factura-encabezado/
-│   │   │   │   │   ├── factura-encabezado.component.html
-│   │   │   │   │   └── home.component.ts
-│   │   │   │   ├── home/
-│   │   │   │   │   ├── home.component.html
-│   │   │   │   │   └── factura-encabezado.component.ts
-│   │   │   │   ├── pago-método/
-│   │   │   │   │   ├── pago-metodo.component.html
-│   │   │   │   │   └── pago-metodo.component.ts
-│   │   │   │   ├── productos/
-│   │   │   │   │   ├── productos.component.html
-│   │   │   │   │   └── productos.component.ts
-│   │   │   ├── app.component.css
-│   │   │   ├── app.component.html
-│   │   │   ├── app.component.ts
-│   │   │   ├── app.config.ts
-│   │   │   └── app.routes.ts
-│   │   ├── theme/
-│   │   │   └── variables.css
-│   │   ├── main.ts
-│   │   ├── styles.css
-│   │   └── index.html
-│   ├── angular.json
-│   ├── ionic.config.json
-│   ├── package.json
 │   ├── Dockerfile
-│   └── capacitor.config.ts
-├── .editorconfig
-├── .gitignore
-├── README.md
-└── docker-compose.yml
+│   └── package.json
+├── docker-compose.yml
+└── README.md
 ```
 
 ---
 
-## 📂 API SWAGGER BACKEND
-Ingresar en el navegador la ruta:
-```
-http://localhost:9000/swagger-ui/index.html
-```
+## 🚀 Cómo iniciar el proyecto
 
----
-
-## ♻️ Limpieza
+### 1. Clonar el repositorio
 
 ```bash
-docker compose down --rmi all --volumes --remove-orphans
+git clone https://github.com/tu-usuario/project_app_barberia.git
+cd project_app_barberia
+```
+
+### 2. Construir y levantar los contenedores
+
+```bash
+docker compose build --no-cache
+docker compose up -d
+```
+
+Este comando ejecuta:
+
+- **PostgreSQL** en el puerto `5432`
+- **pgAdmin** en el puerto `5050`
+- **Backend (Spring Boot)** en el puerto `8080`
+- **Frontend (Angular/Ionic)** en el puerto `4200`
+
+### 3. Acceder a pgAdmin
+
+Ir a: [http://localhost:5050](http://localhost:5050)  
+Credenciales por defecto:
+
+- Usuario: `admin@admin.com`
+- Contraseña: `admin123`
+
+Registrar un servidor nuevo apuntando a:
+
+- Host: `dbpostgres`
+- Usuario: `userroot`
+- Contraseña: `123456`
+
+---
+
+## 🧹 Comandos de limpieza
+
+Para detener los contenedores y eliminar volúmenes:
+
+```bash
+docker compose down -v
+```
+
+Para borrar imágenes, contenedores y caché:
+
+```bash
+docker system prune -a --volumes
 ```
 
 ---
 
-## 📚 Recursos
+## 🛠️ Stack Tecnológico
 
-* [Angular CLI](https://angular.dev/tools/cli)  
-* [Ionic Docs](https://ionicframework.com/docs)  
-* [Docker Compose](https://docs.docker.com/compose/)
+- **Backend**: Java 21 + Spring Boot + Spring Security + Hibernate + JPA
+- **Frontend**: Angular 18 + Ionic + Node 20
+- **Base de Datos**: PostgreSQL 15
+- **Contenedores**: Docker, Docker Compose
+- **Gestión de DB**: pgAdmin 4
+
+---
+
+## 📫 Endpoints útiles
+
+- `POST /api/auth/login`: Autenticación básica
+- `GET /api/usuarios`: Listado de usuarios (ADMIN)
+- `POST /api/usuarios/registrar/cliente`: Registro de cliente
+- `GET /api/servicios/activos`: Servicios públicos
+
+---
+
+## 🔐 Credenciales iniciales
+
+Se crea automáticamente un usuario administrador:
+
+```
+Username: admin
+Password: admin123
+```
+
+---
+
+## 👥 Autor
+
+Desarrollado por el equipo de ingeniería de sistemas de CORHUILA.
